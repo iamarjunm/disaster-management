@@ -1,0 +1,82 @@
+<%- include('partials/header') %>
+
+<form class="disaster-report-form" action="/report" method="POST" enctype="multipart/form-data">
+    <h2>Report a Disaster</h2>
+
+    <!-- Name and Email Fields -->
+    <div class="form-group">
+        <div>
+            <label for="name">Your Name</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+    </div>
+
+    <!-- Phone Number and Date Fields -->
+    <div class="form-group">
+        <div>
+            <label for="phone">Phone Number</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div>
+            <label for="date">Date & Time</label>
+            <input type="datetime-local" id="date" name="date" required>
+        </div>
+    </div>
+
+    <!-- Disaster Type and Location Fields -->
+    <div class="form-group">
+        <div>
+            <label for="type">Disaster Type</label>
+            <select id="type" name="type" required>
+                <option value="flood">Flood</option>
+                <option value="earthquake">Earthquake</option>
+                <option value="fire">Fire</option>
+                <option value="hurricane">Hurricane</option>
+                <option value="tsunami">Tsunami</option>
+                <option value="landslide">Landslide</option>
+                <option value="volcano">Volcano</option>
+                <option value="drought">Drought</option>
+                <option value="blizzard">Blizzard</option>
+                <option value="tornado">Tornado</option>
+                <option value="extreme_heat">Extreme Heat</option>
+                <option value="storm">Storm</option>
+            </select>
+        </div>
+        <div>
+            <label for="location">Location</label>
+            <input type="text" id="location" name="location" placeholder="Enter location manually" required>
+        </div>
+    </div>
+
+    <!-- Severity and Upload Pictures Fields (Side by Side) -->
+    <div class="form-group">
+        <div>
+            <label for="severity">Severity</label>
+            <select id="severity" name="severity" required>
+                <option value="low">Low</option>
+                <option value="medium">Medium</option>
+                <option value="high">High</option>
+                <option value="critical">Critical</option>
+            </select>
+        </div>
+        <div class="upload-field">
+            <label for="pictures">Upload Pictures</label>
+            <input type="file" id="pictures" name="pictures" accept="image/*" multiple>
+        </div>
+    </div>
+
+    <!-- Description Field -->
+    <div class="description-container">
+        <label for="description">Description</label>
+        <textarea id="description" name="description" required></textarea>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit">Submit Report</button>
+</form>
+
+<%- include('partials/footer') %>

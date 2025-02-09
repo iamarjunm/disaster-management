@@ -1,0 +1,35 @@
+<%- include('partials/header') %>
+
+<h1>Disaster Management</h1>
+<div class="card-container">
+  <% disasters.forEach(function(disaster) { %>
+    <div class="card">
+      <img src="<%= disaster.image %>" alt="<%= disaster.name %> Image">
+      <div class="card-content">
+        <div class="card-title"><%= disaster.name %></div>
+        <div class="card-description"><%= disaster.description %></div>
+        <div class="card-footer">
+          <button class="view-details-btn" data-disaster-id="<%= disaster.id %>">
+            View Details
+          </button>
+        </div>
+      </div>
+    </div>
+  <% }) %>
+</div>
+
+<%- include('partials/footer') %>
+
+<script>
+  document.querySelectorAll('.view-details-btn').forEach(button => {
+    button.addEventListener('click', (e) => {
+      const disasterId = e.target.dataset.disasterId;
+      console.log("Clicked button with disaster ID:", disasterId); // Debugging
+      if (disasterId) {
+        window.location.href = `/management/disaster/${disasterId}`;
+      } else {
+        console.error("Disaster ID is missing!");
+      }
+    });
+  });
+</script>

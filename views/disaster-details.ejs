@@ -1,0 +1,15 @@
+<%- include('partials/header') %>
+
+<div class="disaster-details">
+  <h2><%= disaster.name %></h2>
+  <img src="<%= disaster.image %>" alt="<%= disaster.name %> Image">
+  <p><strong>Description:</strong> <%= disaster.description %></p>
+  <p><strong>About:</strong> <%= disaster.detailedInfo.about %></p>
+  <p><strong>Previous Cases:</strong> <%= disaster.detailedInfo.previousCases %></p>
+  <p><strong>Severity:</strong> <%= disaster.detailedInfo.severity %></p>
+  <p><strong>Prevention:</strong> <%= disaster.detailedInfo.prevention %></p>
+  <p><strong>Emergency Response:</strong> <%= disaster.detailedInfo.emergencyResponse %></p>
+  <p><strong>Contact Info:</strong> <%= disaster.detailedInfo.contactInfo %></p>
+</div>
+
+<%- include('partials/footer') %>

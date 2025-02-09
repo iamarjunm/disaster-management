@@ -1,0 +1,234 @@
+<%- include('partials/header') %>
+
+<div class="container">
+  <h1>Admin Panel</h1>
+  
+  <!-- Tabs for different report statuses -->
+  <ul class="nav nav-tabs">
+    <li class="nav-item">
+      <a class="nav-link active" id="pending-tab" href="#pending" data-toggle="tab">Pending</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="assigned-tab" href="#assigned" data-toggle="tab">Assigned</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="resolved-tab" href="#resolved" data-toggle="tab">Resolved</a>
+    </li>
+  </ul>
+
+  <!-- Tab content -->
+  <div class="tab-content">
+    <!-- Pending Reports Tab -->
+<div id="pending" class="tab-pane fade show active">
+  <h2>Pending Reports</h2>
+  <table id="pending-reports-table" class="table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0, 'pending-reports-table')">Name</th>
+        <th onclick="sortTable(1, 'pending-reports-table')">Date</th>
+        <th onclick="sortTable(2, 'pending-reports-table')">Type</th>
+        <th onclick="sortTable(3, 'pending-reports-table')">Location</th>
+        <th>Severity</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="pending-reports-tbody">
+      <% if (pendingReports && pendingReports.length > 0) { %>
+        <% pendingReports.forEach((report) => { %>
+          <tr>
+            <td><%= report.name %></td>
+            <td><%= report.date %></td>
+            <td><%= report.type %></td>
+            <td><%= report.location %></td>
+            <td><%= report.severity %></td>
+            <td><%= report.description %></td>
+            <td>
+              <button class="assign-btn" data-report-id="<%= report.id %>">Assign</button>
+              <button class="mark-resolved-btn" data-report-id="<%= report.id %>">Mark as Resolved</button>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="7">No pending reports available.</td> <!-- Adjust colspan to match the number of columns including action buttons -->
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Assigned Reports Tab -->
+<div id="assigned" class="tab-pane fade">
+  <h2>Assigned Reports</h2>
+  <table id="assigned-reports-table" class="table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0, 'assigned-reports-table')">Name</th>
+        <th onclick="sortTable(1, 'assigned-reports-table')">Date</th>
+        <th onclick="sortTable(2, 'assigned-reports-table')">Type</th>
+        <th onclick="sortTable(3, 'assigned-reports-table')">Location</th>
+        <th>Severity</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="assigned-reports-tbody">
+      <% if (assignedReports && assignedReports.length > 0) { %>
+        <% assignedReports.forEach((report) => { %>
+          <tr>
+            <td><%= report.name %></td>
+            <td><%= report.date %></td>
+            <td><%= report.type %></td>
+            <td><%= report.location %></td>
+            <td><%= report.severity %></td>
+            <td><%= report.description %></td>
+            <td>
+              <button class="assign-btn" data-report-id="<%= report.id %>">Assign</button>
+              <button class="mark-resolved-btn" data-report-id="<%= report.id %>">Mark as Resolved</button>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="7">No assigned reports available.</td> <!-- Adjust colspan to match the number of columns including action buttons -->
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Resolved Reports Tab -->
+<div id="resolved" class="tab-pane fade">
+  <h2>Resolved Reports</h2>
+  <table id="resolved-reports-table" class="table">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0, 'resolved-reports-table')">Name</th>
+        <th onclick="sortTable(1, 'resolved-reports-table')">Date</th>
+        <th onclick="sortTable(2, 'resolved-reports-table')">Type</th>
+        <th onclick="sortTable(3, 'resolved-reports-table')">Location</th>
+        <th>Severity</th>
+        <th>Description</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody id="resolved-reports-tbody">
+      <% if (resolvedReports && resolvedReports.length > 0) { %>
+        <% resolvedReports.forEach((report) => { %>
+          <tr>
+            <td><%= report.name %></td>
+            <td><%= report.date %></td>
+            <td><%= report.type %></td>
+            <td><%= report.location %></td>
+            <td><%= report.severity %></td>
+            <td><%= report.description %></td>
+            <td>
+              <button class="assign-btn" data-report-id="<%= report.id %>">Assign</button>
+              <button class="mark-resolved-btn" data-report-id="<%= report.id %>">Mark as Resolved</button>
+            </td>
+          </tr>
+        <% }); %>
+      <% } else { %>
+        <tr>
+          <td colspan="7">No resolved reports available.</td> <!-- Adjust colspan to match the number of columns including action buttons -->
+        </tr>
+      <% } %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('partials/footer') %>
+
+<script>
+  const assignButtons = document.querySelectorAll('.assign-btn');
+  const markResolvedButtons = document.querySelectorAll('.mark-resolved-btn');
+
+  assignButtons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const reportId = button.dataset.reportId;
+      try {
+        const response = await fetch(`/admin/${reportId}/assign`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const result = await response.json();
+        if (result.success) {
+          console.log('Report assigned successfully!');
+          // Update the UI to reflect the new status
+          button.disabled = true;
+          button.textContent = 'Assigned';
+          // Move the report to the assigned tab
+          const assignedReportsTable = document.getElementById('assigned-reports-tbody');
+          const newReportRow = document.createElement('tr');
+          newReportRow.innerHTML = `
+            <td>${report.name}</td>
+            <td>${report.date}</td>
+            <td>${report.type}</td>
+            <td>${report.location}</td>
+            <td>${report.severity}</td>
+            <td>${report.description}</td>
+            <td>
+              <button class="mark-resolved-btn" data-report-id="${report.id}">Mark as Resolved</button>
+            </td>
+          `;
+          assignedReportsTable.appendChild(newReportRow);
+          // Remove the report from the pending tab
+          const pendingReportsTable = document.getElementById('pending-reports-tbody');
+          const pendingReportRow = pendingReportsTable.querySelector(`tr[data-report-id="${report.id}"]`);
+          pendingReportRow.remove();
+        } else {
+          console.error('Failed to assign report:', result.message);
+        }
+      } catch (err) {
+        console.error('Error assigning report:', err);
+      }
+    });
+  });
+
+  markResolvedButtons.forEach((button) => {
+    button.addEventListener('click', async () => {
+      const reportId = button.dataset.reportId;
+      try {
+        const response = await fetch(`/admin/${reportId}/mark-resolved`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+        });
+        const result = await response.json();
+        if (result.success) {
+          console.log('Report marked as resolved!');
+          // Update the UI to reflect the new status
+          button.disabled = true;
+          button.textContent = 'Resolved';
+          // Move the report to the resolved tab
+          const resolvedReportsTable = document.getElementById('resolved-reports-tbody');
+          const newReportRow = document.createElement('tr');
+          newReportRow.innerHTML = `
+            <td>${report.name}</td>
+            <td>${report.date}</td>
+            <td>${report.type}</td>
+            <td>${report.location}</td>
+            <td>${report.severity}</td>
+            <td>${report.description}</td>
+            <td></td>
+          `;
+          resolvedReportsTable.appendChild(newReportRow);
+          // Remove the report from the assigned or pending tab
+          const assignedReportsTable = document.getElementById('assigned-reports-tbody');
+          const assignedReportRow = assignedReportsTable.querySelector(`tr[data-report-id="${report.id}"]`);
+          if (assignedReportRow) {
+            assignedReportRow.remove();
+          } else {
+            const pendingReportsTable = document.getElementById('pending-reports-tbody');
+            const pendingReportRow = pendingReportsTable.querySelector(`tr[data-report-id="${report.id}"]`);
+            pendingReportRow.remove();
+          }
+        } else {
+          console.error('Failed to mark report as resolved:', result.message);
+        }
+      } catch (err) {
+        console.error('Error marking report as resolved:', err);
+      }
+    });
+  });
+</script>

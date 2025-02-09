@@ -1,0 +1,15 @@
+</main>
+<div class="footer">
+    <footer>
+        <p>Copyright @ <%= new Date().getFullYear() %></p>
+    </footer>
+</div>
+    
+</body>
+
+<script>
+    document.querySelector('.admin-button').addEventListener('click', function(event) {
+        event.preventDefault();
+        document.querySelector('#admin-login').scrollIntoView({ behavior: 'smooth' });
+    });
+</script>
